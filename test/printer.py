@@ -14,11 +14,17 @@ while True:
         os.sys.path.append('/home/' + os.getlogin() + '/.local/lib/python3.8/site-packages')
         # print(os.sys.path)
 
+# scapy requires BOOTP to have a 'raw' mac string (for sending out)
+# Example: 7c:4d:8f:47:7d:af -> |M\x8fG}\xaf
+# Luckily, `mac2str` come to the rescue
+
+printer_mac = '7c:4d:8f:47:7d:af'
+
 # DHCP discover
 pkt = (
     Ether(dst="ff:ff:ff:ff:ff:ff") / IP(src="0.0.0.0", dst="255.255.255.255") / 
     UDP(sport=68, dport=67) / 
-    BOOTP(chaddr='00:11:22:33:44:55') / # Requiring the MAC of sending device
+    BOOTP(chaddr=mac2str(printer_mac)) / # Requiring the MAC of sending device
     DHCP(options=[("message-type", "discover"), "end"])
     )
 # pkt = DHCP()
