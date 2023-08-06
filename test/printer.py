@@ -1,5 +1,6 @@
 #!/bin/python3
 import os
+import random
 while True:
     try:
         from scapy.all import *
@@ -24,7 +25,7 @@ printer_mac = '7c:4d:8f:47:7d:af'
 pkt = (
     Ether(dst="ff:ff:ff:ff:ff:ff") / IP(src="0.0.0.0", dst="255.255.255.255") / 
     UDP(sport=68, dport=67) / 
-    BOOTP(chaddr=mac2str(printer_mac)) / # Requiring the MAC of sending device
+    BOOTP(chaddr=mac2str(printer_mac), xid=random.randint(0, 1 << 32)) / # Requiring the MAC of sending device
     DHCP(options=[("message-type", "discover"), "end"])
     )
 # pkt = DHCP()
